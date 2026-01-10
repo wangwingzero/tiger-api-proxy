@@ -46,6 +46,7 @@ class Config:
     cf_proxy_domain: str = ""
     ip_list: List[IPEntry] = field(default_factory=list)
     selected_ip: Optional[str] = None
+    theme_mode: str = "system"  # dark, light, system
     
     def to_dict(self) -> dict:
         return {
@@ -53,7 +54,8 @@ class Config:
             "current_target_node": self.current_target_node,
             "cf_proxy_domain": self.cf_proxy_domain,
             "ip_list": [ip.to_dict() for ip in self.ip_list],
-            "selected_ip": self.selected_ip
+            "selected_ip": self.selected_ip,
+            "theme_mode": self.theme_mode
         }
     
     @classmethod
@@ -63,7 +65,8 @@ class Config:
             current_target_node=data.get("current_target_node", ""),
             cf_proxy_domain=data.get("cf_proxy_domain", ""),
             ip_list=[IPEntry.from_dict(ip) for ip in data.get("ip_list", [])],
-            selected_ip=data.get("selected_ip")
+            selected_ip=data.get("selected_ip"),
+            theme_mode=data.get("theme_mode", "system")
         )
 
 

@@ -15,8 +15,8 @@ class SpeedTester:
     def __init__(self, timeout: float = 3.0):
         self.timeout = timeout
     
-    def test_ip(self, ip: str, port: int = 443) -> TestResult:
-        """测试单个 IP 的 TCP 连接延迟"""
+    def _test_single_port(self, ip: str, port: int) -> TestResult:
+        """测试单个 IP 单个端口的 TCP 连接延迟"""
         ip_entry = IPEntry(ip=ip, port=port)
         
         try:
@@ -58,6 +58,26 @@ class SpeedTester:
                 success=False,
                 error_message=str(e)
             )
+    
+    def test_ip(self, ip: str, port: int = 443) -> TestResult:
+        """
+        测试单个 IP 的 TCP 连接延迟
+        
+        端口回退机制：先尝试 443，如果失败则尝试 80
+        """
+        # 先尝试指定端口（默认 443）
+        result = self._test_single_port(ip, port)
+        if result.success:
+            return result
+        
+        # 如果 443 失败，尝试 80
+        if port == 443:
+            fallback_result = self._test_single_port(ip, 80)
+            if fallback_result.success:
+                return fallback_result
+        
+        # 都失败了，返回原始结果
+        return result
     
     def test_all(
         self, 

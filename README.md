@@ -25,10 +25,6 @@
 
 ---
 
-<p align="center">
-  <img src="resources/banner.png" alt="Banner" width="100%">
-</p>
-
 帮助你找到最快的 Cloudflare 节点 IP，自动配置 hosts 文件优化访问速度。
 
 ## ✨ 功能特点
@@ -40,10 +36,6 @@
 - 🔐 **管理员权限** - 自动请求管理员权限，安全修改系统文件
 
 ## 📸 界面预览
-
-<p align="center">
-  <img src="resources/feature-icons.png" alt="功能展示" width="600">
-</p>
 
 主界面包含：
 - 目标反代节点配置
@@ -129,7 +121,6 @@ pyinstaller cf_proxy_manager.spec
 ├── cf_proxy_manager.spec     # PyInstaller 配置
 ├── resources/                # 资源文件
 │   ├── icon.ico              # 应用图标
-│   ├── banner.png            # GitHub 横幅
 │   └── mascot.png            # 吉祥物
 └── cf_proxy_manager/         # 主程序包
     ├── main.py               # 入口模块

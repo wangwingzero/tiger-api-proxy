@@ -15,6 +15,9 @@ Users configure a CF reverse proxy domain (e.g., `betterclau.de`) and target nod
 ## Key Features
 
 - IP speed testing with concurrent TCP connection tests
+- Port fallback mechanism (443 → 80) for better connectivity
 - Hosts file management (requires admin privileges)
+- Hosts file viewer for easy inspection
 - Configuration persistence via JSON
-- Tkinter-based GUI for Windows
+- Modern CustomTkinter GUI with dark/light/system themes
+- Component-based UI with IP cards showing latency badges

@@ -34,10 +34,10 @@ def main():
     if not is_admin():
         print("提示: 如需修改 hosts 文件，请以管理员身份运行")
     
-    # 导入并启动 GUI
-    from .gui import CFProxyManagerGUI
+    # 导入并启动 CustomTkinter GUI
+    from .gui_ctk import CFProxyManagerCTk
     
-    app = CFProxyManagerGUI()
+    app = CFProxyManagerCTk()
     app.run()
 
 

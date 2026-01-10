@@ -8,12 +8,19 @@
 └── cf_proxy_manager/         # Main package
     ├── __init__.py           # Package init, version
     ├── main.py               # Entry point, admin checks
-    ├── gui.py                # Tkinter GUI implementation
+    ├── gui.py                # Legacy Tkinter GUI (deprecated)
+    ├── gui_ctk.py            # CustomTkinter GUI (main)
     ├── models.py             # Data models (dataclasses)
     ├── config_manager.py     # Config load/save
     ├── parsers.py            # URL/IP parsing
     ├── hosts_manager.py      # Hosts file operations
+    ├── hosts_viewer.py       # Hosts file viewer dialog
     ├── speed_tester.py       # IP latency testing
+    ├── admin_helper.py       # Admin privilege utilities
+    ├── components/           # Reusable UI components
+    │   ├── __init__.py
+    │   ├── theme.py          # Theme configuration
+    │   └── ip_card.py        # IP card component
     └── tests/                # Test suite
         ├── __init__.py
         ├── test_parsers.py
@@ -30,8 +37,12 @@
 | `config_manager.py` | JSON config persistence to `config.json` |
 | `parsers.py` | `URLParser` and `IPParser` for input validation |
 | `hosts_manager.py` | Read/write Windows hosts file, DNS flush |
-| `speed_tester.py` | TCP connection latency tests with threading |
-| `gui.py` | Main application window and user interactions |
+| `hosts_viewer.py` | Hosts file viewer dialog window |
+| `speed_tester.py` | TCP connection latency tests with port fallback |
+| `gui_ctk.py` | Main CustomTkinter GUI application |
+| `admin_helper.py` | Admin privilege check utilities |
+| `components/theme.py` | Theme colors, fonts, latency thresholds |
+| `components/ip_card.py` | IP address card UI component |
 
 ## Testing Conventions
 

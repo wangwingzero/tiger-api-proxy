@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "README 更新检查",
+  "description": "当 Agent 停止工作后，自动检查代码变更是否需要同步更新 README.md 文档",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "请检查本次会话中的代码变更，并判断 README.md 是否需要更新。如果有以下情况，请更新 README.md：1) 新增或删除了功能 2) 修改了安装或使用方式 3) 更改了项目结构 4) 添加或移除了依赖。如果不需要更新，请简要说明原因。"
+  }
+}
