@@ -3,6 +3,17 @@
 CF Proxy Manager PyInstaller 配置文件
 使用方法: pyinstaller cf_proxy_manager.spec
 """
+import re
+
+# 从 __init__.py 读取版本号
+def get_version():
+    with open('cf_proxy_manager/__init__.py', 'r', encoding='utf-8') as f:
+        content = f.read()
+        match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
+        return match.group(1) if match else '1.0.0'
+
+APP_VERSION = get_version()
+APP_NAME = f'虎哥API反代-v{APP_VERSION}'
 
 block_cipher = None
 
@@ -27,7 +38,7 @@ a = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[
-        'hypothesis',  # 测试库，不需要打包
+        'hypothesis',
         'pytest',
     ],
     win_no_prefer_redirects=False,
@@ -45,21 +56,21 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='虎哥API反代',
+    name=APP_NAME,
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # 不显示控制台
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='resources/icon.ico',  # 应用图标
-    uac_admin=True,  # 请求管理员权限
+    icon='resources/icon.ico',
+    uac_admin=True,
     uac_uiaccess=False,
-    manifest='app.manifest',  # 使用自定义清单文件
+    manifest='app.manifest',
 )

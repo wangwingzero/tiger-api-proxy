@@ -20,9 +20,13 @@ class CFProxyManagerGUI:
     
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("🐯 虎哥API反代")
-        self.root.geometry("600x650")
+        self.root.title(f"🐯 虎哥API反代 v{self._get_version()}")
+        self.root.geometry("650x700")
+        self.root.minsize(550, 600)
         self.root.resizable(True, True)
+        
+        # 配置样式
+        self._configure_styles()
         
         # 初始化组件
         self.config_manager = ConfigManager()
@@ -39,10 +43,53 @@ class CFProxyManagerGUI:
         self._create_widgets()
         self._load_config_to_ui()
     
+    def _configure_styles(self):
+        """配置全局样式"""
+        style = ttk.Style()
+        
+        # 设置默认字体
+        default_font = ("Segoe UI", 10)
+        
+        # Treeview 样式 - 增加行高
+        style.configure(
+            "Treeview",
+            font=default_font,
+            rowheight=28
+        )
+        style.configure(
+            "Treeview.Heading",
+            font=("Segoe UI", 10, "bold")
+        )
+        
+        # LabelFrame 样式
+        style.configure(
+            "TLabelframe.Label",
+            font=("Segoe UI", 10, "bold")
+        )
+        
+        # Button 样式
+        style.configure(
+            "TButton",
+            font=default_font,
+            padding=(8, 4)
+        )
+        
+        # Label 样式
+        style.configure(
+            "TLabel",
+            font=default_font
+        )
+        
+        # Entry 样式
+        style.configure(
+            "TEntry",
+            font=default_font
+        )
+    
     def _create_widgets(self):
         """创建所有界面组件"""
         # 主容器
-        main_frame = ttk.Frame(self.root, padding="10")
+        main_frame = ttk.Frame(self.root, padding="12")
         main_frame.pack(fill=tk.BOTH, expand=True)
         
         # 1. 目标反代节点区域
@@ -59,12 +106,12 @@ class CFProxyManagerGUI:
     
     def _create_target_node_section(self, parent):
         """创建目标反代节点区域"""
-        frame = ttk.LabelFrame(parent, text="目标反代节点", padding="5")
-        frame.pack(fill=tk.X, pady=(0, 10))
+        frame = ttk.LabelFrame(parent, text="目标反代节点", padding="8")
+        frame.pack(fill=tk.X, pady=(0, 12))
         
         # 当前节点选择
         row1 = ttk.Frame(frame)
-        row1.pack(fill=tk.X, pady=2)
+        row1.pack(fill=tk.X, pady=4)
         
         ttk.Label(row1, text="当前节点:").pack(side=tk.LEFT)
         
@@ -72,34 +119,35 @@ class CFProxyManagerGUI:
         self.target_node_combo = ttk.Combobox(
             row1, 
             textvariable=self.target_node_var,
-            width=40
+            width=40,
+            font=("Segoe UI", 10)
         )
-        self.target_node_combo.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+        self.target_node_combo.pack(side=tk.LEFT, padx=8, fill=tk.X, expand=True)
         self.target_node_combo.bind('<<ComboboxSelected>>', self._on_target_node_changed)
         self.target_node_combo.bind('<Return>', self._on_add_target_node)
         
-        ttk.Button(row1, text="添加", command=self._on_add_target_node).pack(side=tk.LEFT)
+        ttk.Button(row1, text="添加", command=self._on_add_target_node).pack(side=tk.LEFT, padx=2)
         ttk.Button(row1, text="删除", command=self._on_delete_target_node).pack(side=tk.LEFT, padx=2)
     
     def _create_cf_proxy_section(self, parent):
         """创建 CF 反代配置区域"""
-        frame = ttk.LabelFrame(parent, text="CF 反代配置", padding="5")
-        frame.pack(fill=tk.X, pady=(0, 10))
+        frame = ttk.LabelFrame(parent, text="CF 反代配置", padding="8")
+        frame.pack(fill=tk.X, pady=(0, 12))
         
         # 反代域名输入
         row1 = ttk.Frame(frame)
-        row1.pack(fill=tk.X, pady=2)
+        row1.pack(fill=tk.X, pady=4)
         
         ttk.Label(row1, text="反代域名/URL:").pack(side=tk.LEFT)
         
         self.cf_domain_var = tk.StringVar()
-        self.cf_domain_entry = ttk.Entry(row1, textvariable=self.cf_domain_var, width=45)
-        self.cf_domain_entry.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+        self.cf_domain_entry = ttk.Entry(row1, textvariable=self.cf_domain_var, width=45, font=("Segoe UI", 10))
+        self.cf_domain_entry.pack(side=tk.LEFT, padx=8, fill=tk.X, expand=True)
         self.cf_domain_var.trace_add('write', self._on_cf_domain_changed)
         
         # 完整代理地址显示
         row2 = ttk.Frame(frame)
-        row2.pack(fill=tk.X, pady=2)
+        row2.pack(fill=tk.X, pady=4)
         
         ttk.Label(row2, text="完整代理地址:").pack(side=tk.LEFT)
         
@@ -109,7 +157,7 @@ class CFProxyManagerGUI:
             textvariable=self.full_proxy_url_var,
             foreground="blue"
         )
-        self.full_proxy_url_label.pack(side=tk.LEFT, padx=5)
+        self.full_proxy_url_label.pack(side=tk.LEFT, padx=8)
     
     def _create_ip_management_section(self, parent):
         """创建优选 IP 管理区域"""
@@ -493,3 +541,8 @@ class CFProxyManagerGUI:
     def run(self):
         """运行主循环"""
         self.root.mainloop()
+    
+    def _get_version(self) -> str:
+        """获取版本号"""
+        from . import __version__
+        return __version__
