@@ -69,6 +69,12 @@ class AppTheme:
         if result is None:
             return ("⏳ 待测试", AppTheme.COLORS["muted"])
         if result.success:
+            # 显示丢包率
+            if hasattr(result, 'packet_loss') and result.packet_loss > 0:
+                if result.packet_loss < 20:
+                    return (f"✓ 丢包{result.packet_loss:.0f}%", AppTheme.COLORS["success"])
+                else:
+                    return (f"⚠ 丢包{result.packet_loss:.0f}%", AppTheme.COLORS["warning"])
             return ("✓ 可用", AppTheme.COLORS["success"])
         return ("✗ 不可用", AppTheme.COLORS["danger"])
     

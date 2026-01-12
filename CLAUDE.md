@@ -30,39 +30,48 @@ python -m PyInstaller cf_proxy_manager.spec --noconfirm --clean
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────┐
-│                   GUI Layer                      │
-│           CFProxyManagerCTk (gui_ctk.py)         │
-├─────────────────────────────────────────────────┤
-│                Core Services                     │
-│  ConfigManager │ SpeedTester │ HostsManager     │
-│  URLParser     │ IPParser    │ AdminHelper      │
-├─────────────────────────────────────────────────┤
-│                 System Layer                     │
-│     File I/O  │  Network Socket  │  ctypes      │
-└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                      GUI Layer                           │
+│              CFProxyManagerCTk (gui_ctk.py)              │
+│      Components: ip_card, comparison_card/section        │
+├─────────────────────────────────────────────────────────┤
+│                    Core Services                         │
+│  ConfigManager  │  SpeedTester    │  ComparisonTester   │
+│  HostsManager   │  ServiceManager │  AdminHelper        │
+│  URLParser      │  IPParser       │  Logger             │
+├─────────────────────────────────────────────────────────┤
+│                    System Layer                          │
+│     File I/O   │   Network Socket/SSL   │   ctypes      │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ## Key Modules
 
 | Module | Purpose |
 |--------|---------|
-| `models.py` | Dataclasses: `IPEntry`, `TestResult`, `Config`, `ProxyConfig`, `HostsEntry` |
+| `models.py` | Dataclasses: `IPEntry`, `TestResult`, `Config`, `ProxyConfig`, `HostsEntry`, `ComparisonService`, `ComparisonResult` |
 | `config_manager.py` | JSON config persistence to `config.json` |
 | `parsers.py` | `URLParser` and `IPParser` for input validation |
 | `hosts_manager.py` | Read/write Windows hosts file, DNS flush, backup |
-| `speed_tester.py` | TCP latency tests with port fallback (443→80) |
+| `speed_tester.py` | TCP latency tests with port fallback (443→80) and packet loss detection |
+| `comparison_tester.py` | HTTPS SSL latency comparison across proxy services |
+| `service_manager.py` | Manages list of comparison services (add/remove/reset) |
+| `logger.py` | File logging with detailed format for debugging |
 | `gui_ctk.py` | Main CustomTkinter GUI application |
 | `components/theme.py` | Theme colors, fonts, latency thresholds |
-| `components/ip_card.py` | Reusable IP card UI component |
+| `components/ip_card.py` | IP card with latency/packet loss badges |
+| `components/comparison_card.py` | Comparison result card |
+| `components/comparison_section.py` | Comparison section UI container |
 
 ## Code Patterns
 
 - **Dataclasses** with `to_dict()`/`from_dict()` for JSON serialization
 - **Static methods** for stateless utility functions (parsers)
-- **Threading** for non-blocking speed tests (ThreadPoolExecutor, max 5 workers)
-- **Port fallback**: Tests port 443 first, falls back to 80 on failure
+- **Threading** for non-blocking tests (ThreadPoolExecutor, 5 workers for IP tests, 8 for comparison)
+- **Port fallback**: SpeedTester tests port 443 first, falls back to 80 on failure
+- **SSL testing**: ComparisonTester uses full HTTPS/SSL handshake for accurate latency
 - **Property-based testing** using `hypothesis` library
+- **Global logger**: Import `from .logger import logger` for debug logging
 
 ## Testing
 
@@ -97,3 +106,4 @@ The spec file (`cf_proxy_manager.spec`) automatically reads this version for EXE
 - Hosts file path: `C:\Windows\System32\drivers\etc\hosts`
 - Admin privileges recommended for hosts modification
 - Build produces single-file EXE with UAC admin request
+- Logs stored in `logs/app_YYYYMMDD.log` (project root or EXE directory)

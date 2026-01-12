@@ -1,3 +1,7 @@
+---
+inclusion: always
+---
+
 # Tech Stack
 
 ## Language & Runtime
@@ -22,16 +26,21 @@
 cf_proxy_manager/     # Main package
 ├── main.py           # Entry point, admin privilege handling
 ├── gui_ctk.py        # CustomTkinter GUI (CFProxyManagerCTk class)
-├── models.py         # Dataclasses: IPEntry, TestResult, Config, ProxyConfig
+├── models.py         # Dataclasses: IPEntry, TestResult, Config, ProxyConfig, ComparisonService, ComparisonResult
 ├── config_manager.py # JSON config persistence
 ├── parsers.py        # URL and IP parsing utilities
 ├── hosts_manager.py  # Windows hosts file operations
 ├── hosts_viewer.py   # Hosts file viewer dialog
-├── speed_tester.py   # TCP latency testing with port fallback (443→80)
+├── speed_tester.py   # TCP latency testing with port fallback (443→80) and packet loss detection
+├── comparison_tester.py  # HTTPS latency comparison across proxy services
+├── service_manager.py    # Comparison service list management
 ├── admin_helper.py   # Admin privilege utilities
+├── logger.py         # Detailed logging with file output
 ├── components/       # Reusable UI components
 │   ├── theme.py      # Theme configuration
-│   └── ip_card.py    # IP card component
+│   ├── ip_card.py    # IP card component
+│   ├── comparison_card.py    # Comparison result card
+│   └── comparison_section.py # Comparison section UI
 └── tests/            # Property-based tests using hypothesis
 ```
 

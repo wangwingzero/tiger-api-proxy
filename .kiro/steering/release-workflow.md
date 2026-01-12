@@ -30,6 +30,7 @@ cf_proxy_manager/__init__.py   → __version__ = "x.x.x"
 ```
 
 **版本号自动同步机制：**
+
 - `cf_proxy_manager.spec` 会自动读取 `__init__.py` 中的版本号
 - EXE 文件名自动变为 `虎哥API反代-vx.x.x.exe`
 - 程序标题自动显示 `🐯 虎哥API反代 vx.x.x`
@@ -38,8 +39,8 @@ cf_proxy_manager/__init__.py   → __version__ = "x.x.x"
 
 根据本次改动类型，检查并更新 `.kiro/steering/` 下的文档：
 
-| 变更类型             | 需更新的文件   |
-| -------------------- | -------------- |
+| 变更类型             | 需更新的文件     |
+| -------------------- | ---------------- |
 | 新增/删除/重命名模块 | `structure.md` |
 | 新增/删除功能        | `product.md`   |
 | 依赖变更             | `tech.md`      |
@@ -51,14 +52,14 @@ cf_proxy_manager/__init__.py   → __version__ = "x.x.x"
 
 ### README 更新检查清单
 
-| 变更类型 | 需更新的 README 章节 |
-| -------- | -------------------- |
-| 新增功能 | `✨ 功能特点`、`📖 使用说明` |
-| 界面变更 | `📸 界面预览` |
-| 新增/删除模块 | `📁 项目结构` |
-| 依赖变更 | `🚀 快速开始` |
-| 打包方式变更 | `🔧 打包说明` |
-| 重要注意事项 | `⚠️ 注意事项` |
+| 变更类型      | 需更新的 README 章节             |
+| ------------- | -------------------------------- |
+| 新增功能      | `✨ 功能特点`、`📖 使用说明` |
+| 界面变更      | `📸 界面预览`                  |
+| 新增/删除模块 | `📁 项目结构`                  |
+| 依赖变更      | `🚀 快速开始`                  |
+| 打包方式变更  | `🔧 打包说明`                  |
+| 重要注意事项  | `⚠️ 注意事项`                |
 
 ### README 章节说明
 
@@ -96,16 +97,16 @@ git push origin main
 
 ### Commit 类型
 
-| 类型     | 说明                   |
-| -------- | ---------------------- |
-| feat     | 新功能                 |
-| fix      | Bug 修复               |
-| perf     | 性能优化               |
-| refactor | 代码重构               |
-| docs     | 文档更新               |
-| style    | 代码格式               |
-| test     | 测试相关               |
-| chore    | 构建/工具变更          |
+| 类型     | 说明          |
+| -------- | ------------- |
+| feat     | 新功能        |
+| fix      | Bug 修复      |
+| perf     | 性能优化      |
+| refactor | 代码重构      |
+| docs     | 文档更新      |
+| style    | 代码格式      |
+| test     | 测试相关      |
+| chore    | 构建/工具变更 |
 
 ## 6. 打包 EXE
 
@@ -130,6 +131,7 @@ gh release create "v$version" "dist/虎哥API反代-v$version.exe" --repo wangwi
 ```
 
 或手动操作：
+
 1. 访问 https://github.com/wangwingzero/tiger-api-proxy/releases
 2. 点击 Draft a new release
 3. Tag: `vx.x.x`，Title: `vx.x.x - <描述>`

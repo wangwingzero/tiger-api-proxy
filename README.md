@@ -29,7 +29,9 @@
 
 ## ✨ 功能特点
 
-- 🚀 **IP 测速** - 自动测试多个 Cloudflare IP 的 TCP 延迟，找出最快节点
+- 🚀 **IP 测速** - 自动测试多个 Cloudflare IP 的 TCP 延迟和丢包率，找出最稳定节点
+- 📥 **V2Ray 导入** - 支持从 vless/trojan/vmess 链接批量导入 IP 地址
+- 📊 **效果对比** - 对比你的反代与公共服务（宁波节点、BetterClaude 等）的延迟
 - 📝 **Hosts 管理** - 一键修改系统 hosts 文件，无需手动编辑
 - 🔍 **Hosts 查看器** - iOS 风格界面，查看和管理所有 hosts 配置
 - 💾 **配置持久化** - 自动保存配置，下次启动自动加载
@@ -80,14 +82,25 @@ python run.py
 ### 3. IP 测速
 
 1. 在「优选 IP 管理」区域可以看到预设的 Cloudflare IP
-2. 点击「开始测速」测试所有 IP 的延迟
-3. 测速完成后，IP 会按延迟从低到高排序
+2. 点击「📥 导入」可从 V2Ray 链接批量导入 IP（支持 vless/trojan/vmess）
+3. 点击「开始测速」测试所有 IP 的延迟
+4. 测速完成后，IP 会按延迟从低到高排序
 
 ### 4. 应用最佳 IP
 
 点击「应用最佳 IP」将延迟最低的 IP 写入 hosts 文件
 
-### 5. 查看 Hosts 配置
+### 5. 效果对比（新功能）
+
+1. 点击「开始对比」测试你的反代与公共服务的延迟
+2. 对比结果包括：
+   - 你的反代（直连）- 作为基准
+   - 你的反代（优选IP）- 使用测速最佳 IP
+   - 公共服务（上海节点、宁波节点、AnyRouter、BetterClaude）
+3. 结果按延迟排序，显示相对基准的提升百分比
+4. 点击「管理服务」可添加/删除对比服务
+
+### 6. 查看 Hosts 配置
 
 点击「📋 查看 hosts」打开 iOS 风格的 Hosts 查看器：
 - 查看所有已配置的 hosts 条目
@@ -124,15 +137,24 @@ pyinstaller cf_proxy_manager.spec
 │   └── mascot.png            # 吉祥物
 └── cf_proxy_manager/         # 主程序包
     ├── main.py               # 入口模块
-    ├── gui.py                # 主界面
+    ├── gui_ctk.py            # 主界面（CustomTkinter）
     ├── hosts_viewer.py       # Hosts 查看器
-    ├── ios_widgets.py        # iOS 风格组件
     ├── hosts_manager.py      # Hosts 文件操作
-    ├── speed_tester.py       # IP 测速
+    ├── speed_tester.py       # IP 测速（含丢包率检测）
+    ├── comparison_tester.py  # 效果对比测试
+    ├── service_manager.py    # 对比服务管理
+    ├── v2ray_parser.py       # V2Ray 链接解析
     ├── config_manager.py     # 配置管理
     ├── parsers.py            # URL/IP 解析
     ├── admin_helper.py       # 管理员权限
-    └── models.py             # 数据模型
+    ├── models.py             # 数据模型
+    ├── logger.py             # 日志系统
+    └── components/           # UI 组件
+        ├── theme.py          # 主题配置
+        ├── ip_card.py        # IP 卡片
+        ├── comparison_card.py    # 对比结果卡片
+        ├── comparison_section.py # 对比区域
+        └── import_dialog.py  # V2Ray 导入对话框
 ```
 
 ## ⚠️ 注意事项

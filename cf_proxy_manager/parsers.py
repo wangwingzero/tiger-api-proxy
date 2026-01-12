@@ -52,19 +52,10 @@ class URLParser:
     
     @staticmethod
     def build_proxy_url(cf_domain: str, target_node: str) -> str:
-        """构建完整的代理 URL
-        
-        Args:
-            cf_domain: CF 反代域名（如 betterclau.de 或 https://betterclau.de）
-            target_node: 目标节点（如 anyrouter.top 或 https://anyrouter.top）
-        
-        Returns:
-            完整代理地址（如 https://betterclau.de/claude/anyrouter.top）
-        """
+        """构建完整的代理 URL"""
         cf_domain = cf_domain.strip()
         target_node = target_node.strip()
         
-        # 移除 CF 域名的协议前缀
         if cf_domain.startswith(('http://', 'https://')):
             cf_domain = URLParser.extract_domain(cf_domain)
         
@@ -74,9 +65,7 @@ class URLParser:
         if not target_node:
             return f"https://{cf_domain}"
         
-        # 移除目标节点的协议前缀，只保留域名
         target_domain = URLParser.extract_domain(target_node) or target_node
-        
         return f"https://{cf_domain}/claude/{target_domain}"
     
     @staticmethod
@@ -87,7 +76,6 @@ class URLParser:
             return ""
         
         if not url.startswith(('http://', 'https://')):
-            # 可能是纯域名
             if '/' in url:
                 return url.split('/')[0]
             return url
@@ -105,15 +93,45 @@ class URLParser:
         if not url:
             return False
         
-        # 纯域名也是有效的
         if not url.startswith(('http://', 'https://')):
-            # 简单的域名验证
             domain_pattern = r'^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}(/.*)?$'
             return bool(re.match(domain_pattern, url))
         
         try:
             parsed = urlparse(url)
             return bool(parsed.netloc)
+        except Exception:
+            return False
+    
+    @staticmethod
+    def is_valid_https_url(url: str) -> bool:
+        """
+        验证 HTTPS URL 格式
+        
+        Args:
+            url: 要验证的 URL
+            
+        Returns:
+            True 如果是有效的 HTTPS URL
+        """
+        url = url.strip()
+        if not url:
+            return False
+        
+        if not url.startswith('https://'):
+            return False
+        
+        try:
+            parsed = urlparse(url)
+            if not parsed.hostname:
+                return False
+            
+            hostname = parsed.hostname
+            domain_pattern = r'^[a-zA-Z0-9]([a-zA-Z0-9\-\.]*[a-zA-Z0-9])?$'
+            if not re.match(domain_pattern, hostname):
+                return False
+            
+            return True
         except Exception:
             return False
 
@@ -127,13 +145,7 @@ class IPParser:
     
     @staticmethod
     def parse(entry: str) -> Optional[IPEntry]:
-        """
-        解析 IP 条目
-        支持格式:
-        - 103.21.244.78
-        - 103.21.244.78:443
-        - 103.21.244.78:443#🇩🇪 法兰克福
-        """
+        """解析 IP 条目"""
         entry = entry.strip()
         if not entry:
             return None
@@ -146,11 +158,9 @@ class IPParser:
         port_str = match.group(2)
         port = int(port_str) if port_str else 443
         
-        # 验证 IP 格式
         if not IPParser.is_valid_ip(ip):
             return None
         
-        # 验证端口范围
         if not (1 <= port <= 65535):
             return None
         
@@ -160,8 +170,6 @@ class IPParser:
     def parse_multiple(text: str) -> List[IPEntry]:
         """解析多行或逗号分隔的 IP 列表"""
         entries = []
-        
-        # 支持换行和逗号分隔
         lines = text.replace(',', '\n').split('\n')
         
         for line in lines:

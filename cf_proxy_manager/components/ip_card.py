@@ -119,17 +119,26 @@ class IPCard(ctk.CTkFrame):
     def _bind_click_events(self):
         """绑定点击事件到卡片及其所有子组件"""
         self.bind("<Button-1>", self._on_click)
+        self.bind("<Shift-Button-1>", self._on_shift_click)
         for child in self.winfo_children():
             child.bind("<Button-1>", self._on_click)
+            child.bind("<Shift-Button-1>", self._on_shift_click)
             # 递归绑定子组件的子组件
             for grandchild in child.winfo_children():
                 grandchild.bind("<Button-1>", self._on_click)
+                grandchild.bind("<Shift-Button-1>", self._on_shift_click)
     
     def _on_click(self, event):
         """点击事件处理"""
         self.toggle_selection()
         if self.on_select:
-            self.on_select(self)
+            self.on_select(self, shift_held=False)
+    
+    def _on_shift_click(self, event):
+        """Shift+点击事件处理"""
+        self.set_selected(True)
+        if self.on_select:
+            self.on_select(self, shift_held=True)
     
     def toggle_selection(self):
         """切换选中状态"""
@@ -143,21 +152,26 @@ class IPCard(ctk.CTkFrame):
     
     def _update_appearance(self):
         """更新卡片外观"""
-        if self.is_best:
-            # 最佳 IP 使用金色边框
+        if self.is_selected:
+            # 选中状态：蓝色边框 + 浅蓝背景（优先级最高）
             self.configure(
+                fg_color=("#cce5ff", "#1a3a5c"),  # 浅蓝/深蓝背景
+                border_width=3,
+                border_color=AppTheme.COLORS["primary"]
+            )
+        elif self.is_best:
+            # 最佳 IP：金色边框
+            self.configure(
+                fg_color=("gray95", "gray20"),
                 border_width=2, 
                 border_color=AppTheme.COLORS["best_border"]
             )
-        elif self.is_selected:
-            # 选中状态使用蓝色边框
-            self.configure(
-                border_width=2, 
-                border_color=AppTheme.COLORS["primary"]
-            )
         else:
-            # 默认无边框
-            self.configure(border_width=0)
+            # 默认：无边框
+            self.configure(
+                fg_color=("gray95", "gray20"),
+                border_width=0
+            )
     
     def update_result(self, result: Optional[Any], is_best: bool = False):
         """
