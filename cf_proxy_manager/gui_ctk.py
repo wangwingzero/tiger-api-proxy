@@ -430,7 +430,10 @@ class CFProxyManagerCTk(ctk.CTk):
         self._save_config()
     
     def _on_add_target_node(self):
-        """添加目标节点"""
+        """添加目标节点
+        
+        支持添加完整 URL（如 https://anyrouter.top）或纯域名（如 anyrouter.top）
+        """
         node = self.target_node_var.get().strip()
         if not node:
             return
@@ -438,8 +441,13 @@ class CFProxyManagerCTk(ctk.CTk):
         if node not in self.config.target_nodes:
             self.config.target_nodes.append(node)
             self.target_node_combo.configure(values=self.config.target_nodes)
+            # 切换到新添加的节点
+            self.target_node_var.set(node)
+            self._update_full_proxy_url()
             self._save_config()
             self.status_var.set(f"已添加节点: {node}")
+        else:
+            self.status_var.set(f"节点已存在: {node}")
     
     def _on_delete_target_node(self):
         """删除目标节点"""

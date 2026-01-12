@@ -52,11 +52,19 @@ class URLParser:
     
     @staticmethod
     def build_proxy_url(cf_domain: str, target_node: str) -> str:
-        """构建完整的代理 URL"""
+        """构建完整的代理 URL
+        
+        Args:
+            cf_domain: CF 反代域名（如 betterclau.de 或 https://betterclau.de）
+            target_node: 目标节点（如 anyrouter.top 或 https://anyrouter.top）
+        
+        Returns:
+            完整代理地址（如 https://betterclau.de/claude/anyrouter.top）
+        """
         cf_domain = cf_domain.strip()
         target_node = target_node.strip()
         
-        # 移除协议前缀
+        # 移除 CF 域名的协议前缀
         if cf_domain.startswith(('http://', 'https://')):
             cf_domain = URLParser.extract_domain(cf_domain)
         
@@ -66,7 +74,10 @@ class URLParser:
         if not target_node:
             return f"https://{cf_domain}"
         
-        return f"https://{cf_domain}/claude/{target_node}"
+        # 移除目标节点的协议前缀，只保留域名
+        target_domain = URLParser.extract_domain(target_node) or target_node
+        
+        return f"https://{cf_domain}/claude/{target_domain}"
     
     @staticmethod
     def extract_domain(url: str) -> str:
